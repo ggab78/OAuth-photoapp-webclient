@@ -20,6 +20,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +34,36 @@ public class AlbumsController {
     @Autowired
     RestTemplate restTemplate;
 
+    @Autowired
+    WebClient webClient;
+
+
+    //with webclient
+    @GetMapping("/wc/albums")
+    public String getAlbumsWithWebClient(Model model){
+
+        String url="http://localhost:8082/albums";
+
+        List<AlbumRest> albums=new ArrayList<>();
+        albums=webClient.get()
+                .uri(url)
+                .retrieve()
+                .bodyToMono(new ParameterizedTypeReference<List<AlbumRest>>() {})
+                .block();
+
+
+
+
+
+
+
+        model.addAttribute("albums", albums);
+
+        return "albums";
+    }
+
+
+    //with rest template
     @GetMapping("/albums")
     public String getAlbums(Model model, @AuthenticationPrincipal OidcUser principal){
 
