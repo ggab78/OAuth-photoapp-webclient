@@ -31,7 +31,7 @@ public class AlbumsController {
     OAuth2AuthorizedClientService oAuth2AuthorizedClientService;
 
     @Autowired
-    RestTemplateBuilder restTemplateBuilder;
+    RestTemplate restTemplate;
 
     @GetMapping("/albums")
     public String getAlbums(Model model, @AuthenticationPrincipal OidcUser principal){
@@ -56,7 +56,6 @@ public class AlbumsController {
         headers.add("Authorization","Bearer "+jwtAccessToken);
         HttpEntity entity=new HttpEntity(headers);
 
-        RestTemplate restTemplate=restTemplateBuilder.build();
         ResponseEntity<List<AlbumRest>> responseEntity=restTemplate.exchange(url, HttpMethod.GET, entity, new ParameterizedTypeReference<List<AlbumRest>>() {});
 
 
